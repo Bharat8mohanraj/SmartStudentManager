@@ -1,0 +1,29 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+env/
+ENV/
+.venv/
+.ENV/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# macOS & Linux junk
+.DS_Store
+Thumbs.db
+
+# VS Code or JetBrains IDEs
+.vscode/
+.idea/
+
+# CSV files (optional – remove this if you want to upload student data)
+*.csv
+
+# Log or cache files
+*.log
+*.cache
