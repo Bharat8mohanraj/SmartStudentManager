@@ -1,24 +1,33 @@
-# SmartStudentManager
-A Python-powered student performance manager with grade, rank, and stream-based analysis using Pandas &amp; NumPy.
-# 🎓 Student Performance Tracker
+# Student Performance Tracker
 
-This is a simple Python project to manage and analyze student performance records.
+![Python](https://img.shields.io/badge/Python-3.8+-blue.svg) ![Pandas](https://img.shields.io/badge/Pandas-1.5-green.svg) ![NumPy](https://img.shields.io/badge/NumPy-1.24-yellow.svg)
 
-## 📋 Features
+## Overview
+Student Performance Tracker is a professional-grade Python CLI tool to manage, analyze, and rank student academic records across multiple streams like Maths+CS, Commerce, Biology, and Humanities.  
+This project leverages **Pandas** and **NumPy** for powerful CSV data handling and fast computations, making it easy for educators or admins to track grades, ranks, toppers, and perform updates — all in a user-friendly menu-driven interface.
 
-- Add, Update, Modify, and Delete student records
-- Calculates total, average, percentage, grade
-- Shows subject-wise toppers
-- Works for 4 different streams (Science, Commerce, Humanities)
+## Features
+- Add new students with marks across multiple subjects  
+- Auto-calculate total, average, percentage & grade  
+- Rank students based on total marks  
+- Display subject-wise toppers  
+- Update or modify student data interactively  
+- Delete student records safely  
+- Separate data files for different academic streams  
+- Error handling & input validation for smooth experience
 
-## 💻 Tech Used
+## Why This Project?
+Handling student records manually is tedious and error-prone. This tool brings automation, accuracy, and instant insights to academic data management without any complex UI or database. Perfect for small institutions or tutors.
 
-- Python
-- Pandas
-- NumPy
+## Tech Stack
+- Python 3.8+  
+- Pandas for CSV & data manipulation  
+- NumPy for efficient numerical operations  
 
-## ▶️ How to Run
+## Getting Started
 
-1. Install requirements:
+### Prerequisites
+- Python 3.8 or above installed  
+- Install dependencies:
 ```bash
 pip install pandas numpy
