@@ -6,6 +6,8 @@
 import pandas as pd
 import numpy as np
 import os
+import matplotlib.pyplot as plt
+from datetime import datetime
 
 # ------------------------- CONFIGURATION -------------------------
 STREAM_SUBJECTS = {
@@ -32,6 +34,8 @@ GRADE_SCALE = {
     (0, 34): "F"
 }
 
+CHANGELOG_FILE = "changelog.txt"
+
 # ------------------------- Student Manager Class -------------------------
 class StudentManager:
     def __init__(self, stream_code):
@@ -39,6 +43,10 @@ class StudentManager:
         self.stream_name, self.subjects = STREAM_SUBJECTS[stream_code]
         self.filename = CSV_FILES[stream_code]
         self.data = self.load_data()
+
+    def log_change(self, action, roll):
+        with open(CHANGELOG_FILE, "a") as f:
+            f.write(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] {action} - Roll No: {roll} in {self.stream_name}\n")
 
     def load_data(self):
         expected_columns = ["Roll No", "Name"] + self.subjects + ["Total", "Average", "Percentage", "Rank", "Grade"]
@@ -96,6 +104,7 @@ class StudentManager:
             self.data = pd.concat([self.data, pd.DataFrame([new_row])], ignore_index=True)
             self.update_ranks()
             self.save_data()
+            self.log_change("Added", roll)
             print("✅ Student added successfully!")
         except Exception as e:
             print(f"❌ Error adding student: {e}")
@@ -118,8 +127,6 @@ class StudentManager:
             toppers = self.data[self.data[subject] == max_mark]
             print(f"\nSubject: {subject} | Top Score: {max_mark}")
             print(toppers[["Roll No", "Name", subject, "Grade"]].to_string(index=False))
-
-    # ----------- New methods for patch ------------
 
     def update_student_field(self):
         if self.data.empty:
@@ -181,6 +188,7 @@ class StudentManager:
 
         self.update_ranks()
         self.save_data()
+        self.log_change("Updated Field", roll)
         print(f"✅ {field_to_update} updated successfully for Roll No {roll}.")
 
     def delete_student(self):
@@ -204,6 +212,7 @@ class StudentManager:
         self.data = self.data[self.data['Roll No'] != roll]
         self.update_ranks()
         self.save_data()
+        self.log_change("Deleted", roll)
         print(f"✅ Student with Roll No {roll} deleted successfully.")
 
     def modify_student(self):
@@ -261,7 +270,43 @@ class StudentManager:
 
         self.update_ranks()
         self.save_data()
+        self.log_change("Modified", roll)
         print(f"✅ Student with Roll No {roll} modified successfully.")
+
+    def show_charts(self):
+        if self.data.empty:
+            print(f"⚠️ No data to visualize for {self.stream_name}.")
+            return
+
+        print(f"\n📊 Generating charts for {self.stream_name}...")
+
+        subject_averages = self.data[self.subjects].mean()
+
+        plt.figure(figsize=(10, 6))
+        subject_averages.plot(kind='bar', color='skyblue')
+        plt.title(f'Subject-wise Average Marks - {self.stream_name}')
+        plt.ylabel('Average Marks')
+        plt.xlabel('Subjects')
+        plt.grid(True)
+        plt.tight_layout()
+        plt.show()
+
+        grade_counts = self.data['Grade'].value_counts().sort_index()
+
+        plt.figure(figsize=(6, 6))
+        plt.pie(grade_counts, labels=grade_counts.index, autopct='%1.1f%%', startangle=90)
+        plt.title(f'Grade Distribution - {self.stream_name}')
+        plt.tight_layout()
+        plt.show()
+
+        plt.figure(figsize=(8, 5))
+        plt.scatter(self.data['Rank'], self.data['Percentage'], color='green')
+        plt.title(f'Rank vs Percentage - {self.stream_name}')
+        plt.xlabel('Rank')
+        plt.ylabel('Percentage')
+        plt.grid(True)
+        plt.tight_layout()
+        plt.show()
 
 # ------------------------- Main Menu -------------------------
 def main():
@@ -276,16 +321,17 @@ def main():
         print("4. Update Student Field")
         print("5. Modify Student Details")
         print("6. Delete Student")
-        print("7. Exit")
+        print("7. Show Visual Charts")
+        print("8. Exit")
 
         choice = input("Enter choice: ").strip()
 
-        if choice == '7':
+        if choice == '8':
             print("👋 Goodbye! Thanks for using Student Tracker.")
             break
 
-        if choice not in {'1', '2', '3', '4', '5', '6'}:
-            print("❌ Invalid choice. Please enter a number between 1 and 7.")
+        if choice not in {'1', '2', '3', '4', '5', '6', '7'}:
+            print("❌ Invalid choice. Please enter a number between 1 and 8.")
             continue
 
         print("\nSelect Academic Stream:")
@@ -315,6 +361,8 @@ def main():
             manager.modify_student()
         elif choice == '6':
             manager.delete_student()
+        elif choice == '7':
+            manager.show_charts()
 
 if __name__ == "__main__":
     main()
